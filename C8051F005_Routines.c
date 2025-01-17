@@ -16,7 +16,7 @@
     function prototypes
 */
 void vGlobalInterrupts(bit status);
-static void vTimer1(bit status);
+void vTimer1(bit status);
 
 /*
     routines 
