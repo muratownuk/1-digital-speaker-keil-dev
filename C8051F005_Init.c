@@ -45,25 +45,35 @@ void vWatchdog(bit status){
 /*
     vPort_Init: 
     crossbar enabled (XBARE), weak pull-ups enabled. 
-    port 1 configuration: P1.0 output push-pull, P1.1-7 output open-drain
+    port 1 configuration: P1.0 output push-pull, P1.1-7 output open-drain. 
+    port 1 initialize: P1.0 to low. everything else high and input-mode. 
 
     parameters: none
     return    : none
 */
 void vPort_Init(void){
-    
-    // todo
+        
+    XBR2|=0x40;                         // WEAKPUD=0, XBARE=1 
+    PRT1CF|=0x01;                       // P1.0 push-pull, P1.1-7 open-drain 
+    P1&=~0x01;                          // toggle P1.0 to low (SPEAKER) 
     
 }
 
 /*
     vTimer1_Init:
-    timer 1 in mode 2, timer 1 high byte loaded (for 250us)
-    timer 1 interrupts enabled
+    timer 1 clock select SYSCLK/12 (T1M=0 - default); 
+    TMOD: GATE1=0, C/T1=0, T1M1-0=10, timer 1 in mode 2; 
+    timer 1 high byte loaded (for 250us), reload value; 
+    ET1=1, timer 1 interrupts enabled; 
+    
 */
-void vTimer1_Init(void){
-
-    // todo
-
+void vTimer1_Init(void){ 
+    
+    TMOD|=0x20;                         // timer 1 mode 2 
+    TH1=0xD6;                           // Timer 1 reload value
+    ET1=1;                              // timer 1 interrupt enable 
+    TL1=TH1;                            // first initialization of timer 1 
+    
 }
+
 
