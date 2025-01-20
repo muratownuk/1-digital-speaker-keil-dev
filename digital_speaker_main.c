@@ -6,6 +6,7 @@
 /*
     includes 
 */
+#include "./SiLABS/c8051F000.h" 
 #include "on_off.h" 
 #include "C8051F005_Init.h" 
 #include "C8051F005_Routines.h" 
@@ -19,7 +20,7 @@
 /*
     sbit definitions 
 */
-sbit button=P1^7;                       // 0 = PRESSED 
+sbit button = P1^7;                       // 0 = PRESSED 
 
 /*
     main routine 
