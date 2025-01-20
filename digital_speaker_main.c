@@ -31,7 +31,7 @@ void main(void){
     vPort_Init();                       // initialize used port(s) 
     vTimer1_Init();                     // initialize timer 1 
 
-    while(button!=PRESSED)              // start button (here until pressed) 
+    while(button==PRESSED)              // start button (here until pressed) 
         ;
 
     vGlobalInterrupts(ON);              // enable global interrupts 
@@ -41,5 +41,4 @@ void main(void){
         ;                               // forever loop 
 
 }
-
 
