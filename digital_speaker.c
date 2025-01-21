@@ -44,6 +44,15 @@ void vTimer1_ISR(void) interrupt TIMER1_INT{
 
 }
 
+/*
+    somefunction: 
 
+
+*/
+void vCount(void){
+    if(count==0)
+        ;
+
+}
 
 
