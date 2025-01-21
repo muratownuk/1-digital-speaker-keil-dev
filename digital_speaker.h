@@ -5,6 +5,10 @@
         defines 
     */ 
     #define     TIMER1_INT  3 
+    #define     DEC         0 
+    #define     INC         1 
+    #define     COUNT_MAX   10 
+    #define     COUNT_MIN   0 
 
     #ifndef _DIGITAL_SPEAKER_C_
         
