@@ -9,6 +9,7 @@
     #define     INC         1 
     #define     COUNT_MAX   10 
     #define     COUNT_MIN   0 
+    #define     ISR_COUNT   100 
 
     #ifndef _DIGITAL_SPEAKER_C_
         

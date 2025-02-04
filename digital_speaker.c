@@ -14,7 +14,7 @@
     routine prototypes 
 */
 void vTimer1_ISR(void); 
-
+static void vFrequencyChange(void);
 /*
     sbit defintions 
 */
@@ -26,7 +26,7 @@ sbit SPEAKER = P1^0;
 unsigned char count=COUNT_MIN; 
 unsigned char count_lead=COUNT_MIN+1;
 bit INC_DEC = INC;
-unsigned int count_ISR=0;               // ISR runs every 250us
+unsigned int count_ISR=ISR_COUNT;       // ISR runs every 250us
 
 /*
     routines 
@@ -34,26 +34,21 @@ unsigned int count_ISR=0;               // ISR runs every 250us
 /*
     vTimer1_ISR: 
     services the timer 1 interrupt, which in this case, toggle SPEAKER bit 
-    after 250us*2=500us. 
+    after 250us*count. count_lead equality defines frequency of toggle and is 
+    directly changed with vFrequencyChange routine.   
 */
 void vTimer1_ISR(void) interrupt TIMER1_INT{
 
-    if(INC_DEC){
+    if(!(--count_ISR))                  // 250us*ISR_COUNT=25ms  
+        vFrequencyChange();             // change freq after above duration   
+
+    if(INC_DEC){ 
 
         count++;                        // 250us increment 
 
-        if(count==count_lead){          // tone frequency change 
-            count_lead++; 
+        if(count==count_lead){ 
             SPEAKER=~SPEAKER;           // toggle speaker (on/off) 
             count=COUNT_MIN;            // reset 250us increment counter 
-
-            // go into decrement
-            if(count_lead==COUNT_MAX+1){ 
-                count_lead--; 
-                count=COUNT_MAX+1; 
-                INC_DEC=DEC; 
-            }
-
         }
 
     }
@@ -62,17 +57,8 @@ void vTimer1_ISR(void) interrupt TIMER1_INT{
         count--;                        // 250us decrement 
 
         if(count==count_lead){ 
-            count_lead--; 
             SPEAKER=~SPEAKER;           // toggle speaker (on/off) 
             count=COUNT_MAX;            // reset 250us decrement counter
-
-            // go into increment 
-            if(count_lead==COUNT_MIN){ 
-                count_lead++; 
-                count=COUNT_MIN;  
-                INC_DEC=INC; 
-            }
-
         }
 
     }
@@ -81,61 +67,33 @@ void vTimer1_ISR(void) interrupt TIMER1_INT{
 
 /*
     vFrequencyChange: 
-
+    changes count_lead global variable, effectively increasing/decreasing 
+    frequency of the tone. this will produce siren sound effect.  
 
 */
-void vFrequencyChange(void){ 
+static void vFrequencyChange(void){ 
 
-    
+    if(INC_DEC){ 
+        count_lead++;                   // effectively decreases frequency 
+
+        // go into decrement
+        if(count_lead==COUNT_MAX+1){ 
+            count_lead-=2;
+            count=COUNT_MAX;  
+            INC_DEC=DEC; 
+        }
+
+    }
+    else{ 
+        count_lead--;                   // effectively increases frequency 
+
+        // go into increment 
+        if(count_lead==COUNT_MIN){ 
+            count_lead++; 
+            count=COUNT_MIN; 
+            INC_DEC=INC; 
+        }
+
+    }
 
 } 
-
-
-/*
-    vTimer1_ISR: 
-    services the timer 1 interrupt, which in this case, toggle SPEAKER bit 
-    after 250us*2=500us. 
-
-void vTimer1_ISR(void) interrupt TIMER1_INT{
-
-    if(INC_DEC){
-
-        count++;                        // 250us increment 
-
-        if(count==count_lead){          // tone frequency change 
-            count_lead++; 
-            SPEAKER=~SPEAKER;           // toggle speaker (on/off) 
-            count=COUNT_MIN;            // reset 250us increment counter 
-
-            // go into decrement
-            if(count_lead==COUNT_MAX+1){ 
-                count_lead--; 
-                count=COUNT_MAX+1; 
-                INC_DEC=DEC; 
-            }
-
-        }
-
-    }
-    else { 
-
-        count--;                        // 250us decrement 
-
-        if(count==count_lead){ 
-            count_lead--; 
-            SPEAKER=~SPEAKER;           // toggle speaker (on/off) 
-            count=COUNT_MAX;            // reset 250us decrement counter
-
-            // go into increment 
-            if(count_lead==COUNT_MIN){ 
-                count_lead++; 
-                count=COUNT_MIN;  
-                INC_DEC=INC; 
-            }
-
-        }
-
-    }
-
-}
-*/
