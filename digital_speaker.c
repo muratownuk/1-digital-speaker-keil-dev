@@ -15,6 +15,7 @@
 */
 void vTimer1_ISR(void); 
 static void vFrequencyChange(void);
+
 /*
     sbit defintions 
 */
@@ -23,10 +24,10 @@ sbit SPEAKER = P1^0;
 /*
     global variables 
 */
-unsigned char count=COUNT_MIN; 
-unsigned char count_lead=COUNT_MIN+1;
+unsigned char count = COUNT_MIN; 
+unsigned char count_lead = COUNT_MIN+1;
 bit INC_DEC = INC;
-unsigned int count_ISR=ISR_COUNT;       // ISR runs every 250us
+unsigned int count_ISR = ISR_COUNT;       // ISR runs every 250us
 
 /*
     routines 
@@ -37,30 +38,18 @@ unsigned int count_ISR=ISR_COUNT;       // ISR runs every 250us
     after 250us*count. count_lead equality defines frequency of toggle and is 
     directly changed with vFrequencyChange routine.   
 */
-void vTimer1_ISR(void) interrupt TIMER1_INT{
+void vTimer1_ISR(void) interrupt TIMER1_INT{ 
 
-    if(!(--count_ISR))                  // 250us*ISR_COUNT=25ms  
-        vFrequencyChange();             // change freq after above duration   
+    if(!(--count_ISR)){                 // 250us*ISR_COUNT=25ms 
+        count_ISR=ISR_COUNT; 
+        vFrequencyChange();             // change freq after above duration
+    }                   
 
-    if(INC_DEC){ 
+    count++;                            // 250us increment
 
-        count++;                        // 250us increment 
-
-        if(count==count_lead){ 
-            SPEAKER=~SPEAKER;           // toggle speaker (on/off) 
-            count=COUNT_MIN;            // reset 250us increment counter 
-        }
-
-    }
-    else { 
-
-        count--;                        // 250us decrement 
-
-        if(count==count_lead){ 
-            SPEAKER=~SPEAKER;           // toggle speaker (on/off) 
-            count=COUNT_MAX;            // reset 250us decrement counter
-        }
-
+    if (count == count_lead){
+        SPEAKER = ~SPEAKER;             // toggle speaker (on/off)
+        count = COUNT_MIN;              // reset 250us increment counter
     }
 
 }
@@ -78,8 +67,7 @@ static void vFrequencyChange(void){
 
         // go into decrement
         if(count_lead==COUNT_MAX+1){ 
-            count_lead-=2;
-            count=COUNT_MAX;  
+            count_lead--;
             INC_DEC=DEC; 
         }
 
@@ -90,10 +78,12 @@ static void vFrequencyChange(void){
         // go into increment 
         if(count_lead==COUNT_MIN){ 
             count_lead++; 
-            count=COUNT_MIN; 
             INC_DEC=INC; 
         }
 
     }
 
 } 
+
+
+
