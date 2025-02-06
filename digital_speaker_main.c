@@ -20,7 +20,7 @@
 /*
     sbit definitions 
 */
-sbit button = P1^7;                       // 0 = PRESSED 
+sbit    button  = P1^7;                 // 0 = PRESSED 
 
 /*
     main routine 
