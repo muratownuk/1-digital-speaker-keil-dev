@@ -13,7 +13,7 @@
       - timer 1
           - timer 1 interrupt enabled
           - timer 1 in mode 2 
-          - timer 1 high byte loaded (250us count) 
+          - timer 1 high byte loaded (100us count) 
 
   - device routines
       - global interrupt enable/disable 
@@ -21,7 +21,8 @@
 
   - timer 1 interrupt service routine 
       - toggles P1.0 bit that is connected to speaker through MOSFET.
-      - this happens every 500us 
+      - this happens with variable frequency to create the effect of siren 
+        sound.  
 
 
 
