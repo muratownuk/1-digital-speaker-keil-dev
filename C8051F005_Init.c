@@ -63,14 +63,14 @@ void vPort_Init(void){
     vTimer1_Init:
     timer 1 clock select SYSCLK/12 (T1M=0 - default); 
     TMOD: GATE1=0, C/T1=0, T1M1-0=10, timer 1 in mode 2; 
-    timer 1 high byte loaded (for 250us), reload value; 
+    timer 1 high byte loaded (for ~100us), reload value; 
     ET1=1, timer 1 interrupts enabled; 
     
 */
 void vTimer1_Init(void){ 
     
     TMOD|=0x20;                         // timer 1 mode 2 
-    TH1=0xD6;                           // Timer 1 reload value
+    TH1=0xF0;                           // Timer 1 reload value
     ET1=1;                              // timer 1 interrupt enable 
     TL1=TH1;                            // first initialization of timer 1 
     
