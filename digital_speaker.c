@@ -19,15 +19,15 @@ static void vFrequencyChange(void);
 /*
     sbit defintions 
 */
-sbit SPEAKER = P1^0; 
+sbit            SPEAKER     = P1^0; 
 
 /*
     global variables 
 */
-unsigned char count = COUNT_MIN; 
-unsigned char count_lead = COUNT_MIN+1;
-bit INC_DEC = INC;
-unsigned int count_ISR = ISR_COUNT;       // ISR runs every 250us
+unsigned char   count       = COUNT_MIN; 
+unsigned char   count_lead  = COUNT_MIN+1; 
+bit             INC_DEC     = INC; 
+unsigned int    count_ISR   = ISR_COUNT;        // 500  
 
 /*
     routines 
@@ -35,21 +35,21 @@ unsigned int count_ISR = ISR_COUNT;       // ISR runs every 250us
 /*
     vTimer1_ISR: 
     services the timer 1 interrupt, which in this case, toggle SPEAKER bit 
-    after 250us*count. count_lead equality defines frequency of toggle and is 
+    after 100us*count. count_lead equality defines frequency of toggle and is 
     directly changed with vFrequencyChange routine.   
 */
 void vTimer1_ISR(void) interrupt TIMER1_INT{ 
 
-    if(!(--count_ISR)){                 // 250us*ISR_COUNT=25ms 
+    if(!(--count_ISR)){                 // 100us*ISR_COUNT=50ms 
         count_ISR=ISR_COUNT;            // reset ISR run counter 
         vFrequencyChange();             // change freq after above duration
     }                   
 
-    count++;                            // 250us increment
+    count++;                            // 100us increment
 
-    if (count == count_lead){
-        SPEAKER = ~SPEAKER;             // toggle speaker (on/off)
-        count = COUNT_MIN;              // reset 250us increment counter
+    if (count==count_lead){
+        SPEAKER=~SPEAKER;               // toggle speaker (on/off)
+        count=COUNT_MIN;                // reset 100us increment counter
     }
 
 }
@@ -66,7 +66,7 @@ static void vFrequencyChange(void){
         count_lead++;                   // effectively decreases frequency 
 
         // go into decrement
-        if(count_lead==COUNT_MAX+1){ 
+        if(count_lead==COUNT_MAX){ 
             count_lead--;
             INC_DEC=DEC; 
         }
