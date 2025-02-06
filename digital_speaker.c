@@ -41,7 +41,7 @@ unsigned int count_ISR = ISR_COUNT;       // ISR runs every 250us
 void vTimer1_ISR(void) interrupt TIMER1_INT{ 
 
     if(!(--count_ISR)){                 // 250us*ISR_COUNT=25ms 
-        count_ISR=ISR_COUNT; 
+        count_ISR=ISR_COUNT;            // reset ISR run counter 
         vFrequencyChange();             // change freq after above duration
     }                   
 
